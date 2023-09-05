@@ -512,17 +512,36 @@ Definition manual_grade_for_eqb_refl_informal : option (nat*string) := None.
 Theorem add_shuffle3 : forall n m p : nat,
   n + (m + p) = m + (n + p).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  rewrite add_assoc'.
+  rewrite add_assoc.
+  assert (n + m = m + n). {
+    rewrite add_comm. reflexivity.
+  }
+  rewrite H.
+  reflexivity. Qed.
+  
 
 (** Now prove commutativity of multiplication.  You will probably want
     to look for (or define and prove) a "helper" theorem to be used in
     the proof of this one. Hint: what is [n * (1 + k)]? *)
 
+Theorem mul_n_sm: forall n m : nat,
+  n + n * m = n * S m.
+Proof.
+  intros. induction n.
+  -simpl. reflexivity.
+  -simpl. rewrite <- IHn. rewrite add_shuffle3. reflexivity.
+Qed.
+
+
 Theorem mul_comm : forall m n : nat,
   m * n = n * m.
 Proof.
-  (* FILL IN HERE *) Admitted.
-(** [] *)
+  intros. induction n.
+  -rewrite mul_0_r. simpl. reflexivity.
+  -simpl. rewrite <- mul_n_sm. rewrite IHn. reflexivity. Qed.
+  
 
 (** **** Exercise: 2 stars, standard, optional (plus_leb_compat_l)
 
@@ -535,9 +554,9 @@ Check leb.
 Theorem plus_leb_compat_l : forall n m p : nat,
   n <=? m = true -> (p + n) <=? (p + m) = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
-
-(** [] *)
+  intros. induction p.
+  -simpl. rewrite H. reflexivity.
+  -simpl. rewrite IHp. reflexivity. Qed. 
 
 (** **** Exercise: 3 stars, standard, optional (more_exercises)
 
@@ -552,26 +571,36 @@ Proof.
 Theorem leb_refl : forall n:nat,
   (n <=? n) = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros. induction n.
+  -simpl. reflexivity.
+  -simpl. rewrite IHn. reflexivity. Qed.
+  
 
 Theorem zero_neqb_S : forall n:nat,
   0 =? (S n) = false.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros. induction n.
+  -simpl. reflexivity.
+  -simpl. reflexivity. Qed.
 
 Theorem andb_false_r : forall b : bool,
   andb b false = false.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros. destruct b.
+  -simpl. reflexivity.
+  -simpl. reflexivity. Qed.
 
 Theorem S_neqb_0 : forall n:nat,
   (S n) =? 0 = false.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros. induction n.
+  -simpl. reflexivity.
+  -simpl. reflexivity. Qed.
 
 Theorem mult_1_l : forall n:nat, 1 * n = n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros. induction n.
+  -simpl. reflexivity.
 
 Theorem all3_spec : forall b c : bool,
   orb
