@@ -1056,8 +1056,12 @@ Proof.
 Theorem plus_id_exercise : forall n m o : nat,
   n = m -> m = o -> n + m = m + o.
 Proof.
-  (* FILL IN HERE *) Admitted.
-(** [] *)
+  intros n m o.
+  intros H1 H2.
+  rewrite H1.
+  rewrite H2.
+  reflexivity. Qed.
+
 
 (** The [Admitted] command tells Coq that we want to skip trying
     to prove this theorem and just accept it as a given.  This can be
@@ -1104,9 +1108,10 @@ Proof.
 Theorem mult_n_1 : forall p : nat,
   p * 1 = p.
 Proof.
-  (* FILL IN HERE *) Admitted.
-
-(** [] *)
+  intros p.
+  rewrite <- mult_n_Sm.
+  rewrite <- mult_n_O.
+  reflexivity. Qed.
 
 (* ################################################################# *)
 (** * Proof by Case Analysis *)
@@ -1302,8 +1307,13 @@ Qed.
 Theorem andb_true_elim2 : forall b c : bool,
   andb b c = true -> c = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
-(** [] *)
+  intros. destruct b eqn:Eb.
+  -destruct c eqn:Ec.
+    +reflexivity.
+    +rewrite <- H. reflexivity.
+  -destruct c eqn:Ec.
+    +reflexivity.
+    +rewrite <- H. reflexivity. Qed.
 
 (** Before closing the chapter, let's mention one final
     convenience.  As you may have noticed, many proofs perform case
@@ -1343,8 +1353,10 @@ Qed.
 Theorem zero_nbeq_plus_1 : forall n : nat,
   0 =? (n + 1) = false.
 Proof.
-  (* FILL IN HERE *) Admitted.
-(** [] *)
+  intros [].
+  +reflexivity.
+  +reflexivity. Qed.
+
 
 (* ================================================================= *)
 (** ** More on Notation (Optional) *)
@@ -1447,9 +1459,10 @@ Theorem identity_fn_applied_twice :
   (forall (x : bool), f x = x) ->
   forall (b : bool), f (f b) = b.
 Proof.
-  (* FILL IN HERE *) Admitted.
-
-(** [] *)
+  intros.
+  destruct b.
+  -rewrite H. rewrite H. reflexivity.
+  -rewrite H. rewrite H. reflexivity. Qed.
 
 (** **** Exercise: 1 star, standard (negation_fn_applied_twice)
 
@@ -1477,9 +1490,12 @@ Theorem andb_eq_orb :
   (andb b c = orb b c) ->
   b = c.
 Proof.
-  (* FILL IN HERE *) Admitted.
-
-(** [] *)
+  intros [] [].
+  -reflexivity.
+  -simpl. intros H. rewrite H. reflexivity.
+  -simpl. intros H. rewrite H. reflexivity.
+  -reflexivity.
+  Qed.
 
 (* ================================================================= *)
 (** ** Course Late Policies Formalized *)

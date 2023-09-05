@@ -1,6 +1,6 @@
 (* Nenhum outro arquivo deve ser importado.
 
-Nome:   *)
+Nome:   Paulo Ricardo dos Reis*)
 
 Require Import Coq.Arith.PeanoNat.
 
@@ -33,14 +33,27 @@ Inductive bin : Type :=
 (* Complete as definições abaixo, sendo incr uma função que incrementa um número
 binário e bin_to_nat a função que converte um binário em natural: *)
 
-Fixpoint incr (m:bin) : bin. Admitted.
+Fixpoint incr (m:bin): bin:=
+  match m with
+    | Z => B1 Z
+    | B0 n => B1 n
+    | B1 n => B0 (incr n)
+  end.
 
-
-Fixpoint bin_to_nat (m:bin) : nat. Admitted.
+Fixpoint bin_to_nat (m:bin) : nat:= 
+  match m with 
+    | Z => 0
+    | B0 n => 2 * (bin_to_nat n)
+    | B1 n => 1 + 2 * (bin_to_nat n)
+  end.
 
 (* Declare uma função que converta natural para binário: *)
 
-Fixpoint nat_to_bin (n:nat) : bin. Admitted.
+Fixpoint nat_to_bin (n:nat) : bin :=
+  match n with
+    | 0 => Z
+    | S n' => incr (nat_to_bin n')
+  end.
 
 (* Prove que as tranformações definididas no diagrama abaixo são válidas: 
 
@@ -58,9 +71,14 @@ Fixpoint nat_to_bin (n:nat) : bin. Admitted.
 Theorem bin_to_nat_pres_incr : forall b : bin,
   bin_to_nat (incr b) = 1 + bin_to_nat b.
 Proof.
-  Admitted.
+  intros. induction b.
+  -simpl. reflexivity.
+  -simpl. reflexivity.
+  -simpl. rewrite IHb. rewrite <- Nat.add_shuffle1. reflexivity.
+  Qed.
 
 Theorem nat_bin_nat : forall n, bin_to_nat (nat_to_bin n) = n.
 Proof.
-  Admitted.
-
+  intros. induction n.
+  -simpl. reflexivity.
+  -simpl. rewrite bin_to_nat_pres_incr. simpl. rewrite IHn. reflexivity.
