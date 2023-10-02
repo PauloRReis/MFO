@@ -316,23 +316,20 @@ Example test_oddmembers:
     using already-defined functions, rather than writing your own
     recursive definition. *)
 
-Definition countoddmembers (l:natlist) : nat
-  match l with 
-  | nil => nil
-  | h :: t => if odd h then 
+Definition countoddmembers (l:natlist) : nat := 
+  length (oddmembers l).
 
 Example test_countoddmembers1:
   countoddmembers [1;0;3;1;4;5] = 4.
-  (* FILL IN HERE *) Admitted.
+  reflexivity. Qed.
 
 Example test_countoddmembers2:
   countoddmembers [0;2;4] = 0.
-  (* FILL IN HERE *) Admitted.
+  reflexivity. Qed.
 
 Example test_countoddmembers3:
   countoddmembers nil = 0.
-  (* FILL IN HERE *) Admitted.
-(** [] *)
+  reflexivity. Qed.
 
 (** **** Exercise: 3 stars, advanced (alternate)
 
@@ -348,8 +345,13 @@ Example test_countoddmembers3:
     lists at the same time with the "multiple pattern" syntax we've
     seen before. *)
 
-Fixpoint alternate (l1 l2 : natlist) : natlist
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Fixpoint alternate (l1 l2 : natlist) : natlist :=
+  match l1, l2 with
+  | t, nil => t 
+  | nil, t => t
+  | h1 :: t1, h2 :: t2 => h1 :: h2 :: (alternate t1 t2)
+  end.
+  
 
 Example test_alternate1:
   alternate [1;2;3] [4;5;6] = [1;4;2;5;3;6].
